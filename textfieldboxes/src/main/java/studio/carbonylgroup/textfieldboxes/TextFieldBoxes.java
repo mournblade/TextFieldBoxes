@@ -149,6 +149,12 @@ public class TextFieldBoxes extends FrameLayout {
      */
     protected boolean rtl;
 
+    /**
+     * whether the field uses same text color as label & text fields
+     * False by default.
+     */
+    protected boolean useSameTextColorToChild;
+
     protected int labelColor = -1;
     protected int labelTopMargin = -1;
     protected int ANIMATION_DURATION = 100;
@@ -328,7 +334,8 @@ public class TextFieldBoxes extends FrameLayout {
             if (mPasswordToggleDummyDrawable == null)
                 mPasswordToggleDummyDrawable = new ColorDrawable();
 
-            upperPanel.setPadding(getResources().getDimensionPixelOffset(R.dimen.upper_panel_paddingStart), 0, getResources().getDimensionPixelOffset(R.dimen.upper_panel_paddingEnd_small), 0);
+            upperPanel.setPadding(0, 0, getResources().getDimensionPixelOffset(R.dimen.upper_panel_paddingEnd_small), 0);
+            bottomPart.setPadding(0, 0, getResources().getDimensionPixelOffset(R.dimen.upper_panel_paddingEnd_small), 0);
 
             // We add a fake drawableRight to EditText so it will have padding on the right side and text will not go
             // under the icons.
@@ -345,7 +352,8 @@ public class TextFieldBoxes extends FrameLayout {
 
         } else {
 
-            upperPanel.setPadding(getResources().getDimensionPixelOffset(R.dimen.upper_panel_paddingStart), 0, getResources().getDimensionPixelOffset(R.dimen.upper_panel_paddingEnd), 0);
+            upperPanel.setPadding(0, 0, getResources().getDimensionPixelOffset(R.dimen.upper_panel_paddingEnd), 0);
+            bottomPart.setPadding(0, 0, getResources().getDimensionPixelOffset(R.dimen.upper_panel_paddingEnd), 0);
 
             if (mPasswordToggleDummyDrawable != null) {
                 // Make sure that we remove the dummy end compound drawable if it exists, and then
@@ -531,6 +539,7 @@ public class TextFieldBoxes extends FrameLayout {
             this.alwaysShowHint = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_alwaysShowHint, false);
             this.useDenseSpacing = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_useDenseSpacing, false);
             this.rtl = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_rtl, false);
+            this.useSameTextColorToChild = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_useSameTextColorToChild, false);
 
             styledAttrs.recycle();
 
@@ -635,6 +644,8 @@ public class TextFieldBoxes extends FrameLayout {
     protected void setHighlightColor(int colorRes) {
 
         this.floatingLabel.setTextColor(colorRes);
+        if (useSameTextColorToChild)
+            this.editText.setTextColor(colorRes);
         setCursorDrawableColor(this.editText, colorRes);
 
         if (getIsResponsiveIconColor()) {
@@ -878,6 +889,9 @@ public class TextFieldBoxes extends FrameLayout {
             this.onError = true;
             activate(true);
             setHighlightColor(this.errorColor);
+            setEndIcon(R.drawable.ic_error_24_dp);
+            this.endIconImageButton.setColorFilter(0);
+            this.endIconImageButton.setAlpha(1f);
             this.helperLabel.setTextColor(this.errorColor);
             if (errorText != null) {
                 this.helperLabel.setText(errorText);
@@ -902,6 +916,7 @@ public class TextFieldBoxes extends FrameLayout {
         else setHighlightColor(this.secondaryColor);
         this.helperLabel.setTextColor(this.helperTextColor);
         this.helperLabel.setText(this.helperText);
+        setEndIcon(0);
         updateBottomViewVisibility();
     }
 
@@ -937,6 +952,7 @@ public class TextFieldBoxes extends FrameLayout {
         setHasClearButton(this.hasClearButton);
         setHasFocus(this.hasFocus);
         setAlwaysShowHint(this.alwaysShowHint);
+        setUseSameTextColorToChild(this.useSameTextColorToChild);
         updateCounterText(!isManualValidateError);
         updateBottomViewVisibility();
     }
@@ -1181,6 +1197,10 @@ public class TextFieldBoxes extends FrameLayout {
         this.useDenseSpacing = useDenseSpacing;
     }
 
+    public void setUseSameTextColorToChild(boolean useSameTextColorToChild) {
+        this.useSameTextColorToChild = useSameTextColorToChild;
+    }
+
     /* Text Getters */
     public String getLabelText() {
         return this.labelText;
@@ -1296,6 +1316,10 @@ public class TextFieldBoxes extends FrameLayout {
 
     public boolean getUseDenseSpacing() {
         return this.useDenseSpacing;
+    }
+
+    public boolean isUseSameTextColorToChild() {
+        return this.useSameTextColorToChild;
     }
 
     /**
