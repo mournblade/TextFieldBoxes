@@ -519,6 +519,7 @@ public class TextFieldBoxes extends FrameLayout {
                         isPasswordVisible = true;
 
                     }
+                    editText.setSelection(editText.getText().length());
                 }
             }
         });
