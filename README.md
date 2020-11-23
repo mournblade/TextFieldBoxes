@@ -16,6 +16,12 @@ A new Material Design text field that comes in a box, based on [Google Material 
 ​
 ## ***UPDATE NOTICE***
 
+#### 1.4.7 Release
+- Implement password toggle functionality
+
+#### 1.4.6 Release
+- Integrate TextFieldBoxes textColor to ExtendedEditText
+
 #### 1.4.5 Release
 - Fix `attr/counterTextColor` name conflict (#97 #99 #105). The `counterTextColor` property is now renamed to `mCounterTextColor`.
 
