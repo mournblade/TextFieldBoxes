@@ -8,10 +8,9 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
+import androidx.annotation.NonNull;
+
 import android.util.AttributeSet;
-import android.view.View;
 
 
 /**

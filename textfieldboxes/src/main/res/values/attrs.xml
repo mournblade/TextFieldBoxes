@@ -25,6 +25,7 @@
         <attr name="endIcon" format="reference" />
         <attr name="isResponsiveIconColor" format="boolean" />
         <attr name="hasClearButton" format="boolean" />
+        <attr name="passwordToggleEnabled" format="boolean" />
         <attr name="hasFocus" format="boolean" />
         <attr name="alwaysShowHint" format="boolean" />
         <attr name="useDenseSpacing" format="boolean" />

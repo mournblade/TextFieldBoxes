@@ -8,14 +8,11 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
-import android.support.v4.widget.TextViewCompat;
-import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.AppCompatTextView;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
+import android.text.method.SingleLineTransformationMethod;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -24,9 +21,17 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Space;
 import android.widget.TextView;
+
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.widget.TextViewCompat;
+
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.lang.reflect.Field;
 
@@ -128,6 +133,11 @@ public class TextFieldBoxes extends FrameLayout {
     protected boolean hasClearButton;
 
     /**
+     * whether to show the password toggle at the end of the EditText. False by default.
+     */
+    protected boolean passwordToggledEnabled;
+
+    /**
      * whether the EditText is having the focus. False by default.
      */
     protected boolean hasFocus;
@@ -160,6 +170,8 @@ public class TextFieldBoxes extends FrameLayout {
     protected int ANIMATION_DURATION = 100;
     protected boolean onError = false;
     protected boolean activated = false;
+    protected boolean isPasswordVisible = false;
+
     /**
      * See {@link #setManualValidateError(boolean)}
      */
@@ -175,12 +187,12 @@ public class TextFieldBoxes extends FrameLayout {
     protected RelativeLayout upperPanel;
     protected RelativeLayout bottomPart;
     protected RelativeLayout inputLayout;
-    protected AppCompatTextView helperLabel;
-    protected AppCompatTextView counterLabel;
-    protected AppCompatTextView floatingLabel;
-    protected AppCompatImageButton clearButton;
-    protected AppCompatImageButton iconImageButton;
-    protected AppCompatImageButton endIconImageButton;
+    protected TextView helperLabel;
+    protected TextView counterLabel;
+    protected TextView floatingLabel;
+    protected ImageButton clearButton;
+    protected ImageButton iconImageButton;
+    protected ImageButton endIconImageButton;
     protected InputMethodManager inputMethodManager;
 
     protected SimpleTextChangedWatcher textChangeListener;
@@ -492,6 +504,24 @@ public class TextFieldBoxes extends FrameLayout {
                 editText.setText("");
             }
         });
+
+        this.endIconImageButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (passwordToggledEnabled){
+                    if (isPasswordVisible){
+                        setEndIcon(R.drawable.ic_password_visibility_on);
+                        editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                        isPasswordVisible = false;
+                    } else {
+                        setEndIcon(R.drawable.ic_password_visibility_off);
+                        editText.setTransformationMethod(SingleLineTransformationMethod.getInstance());
+                        isPasswordVisible = true;
+
+                    }
+                }
+            }
+        });
     }
 
     protected void handleAttributes(Context context, AttributeSet attrs) {
@@ -535,11 +565,18 @@ public class TextFieldBoxes extends FrameLayout {
                     .getBoolean(R.styleable.TextFieldBoxes_isResponsiveIconColor, true);
             this.hasClearButton = styledAttrs
                     .getBoolean(R.styleable.TextFieldBoxes_hasClearButton, false);
+            this.passwordToggledEnabled = styledAttrs
+                    .getBoolean(R.styleable.TextFieldBoxes_passwordToggleEnabled, false);
             this.hasFocus = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_hasFocus, false);
             this.alwaysShowHint = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_alwaysShowHint, false);
             this.useDenseSpacing = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_useDenseSpacing, false);
             this.rtl = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_rtl, false);
             this.useSameTextColorToChild = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_useSameTextColorToChild, false);
+
+            if (passwordToggledEnabled){
+                this.endIconResourceId = R.drawable.ic_password_visibility_on;
+                editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+            }
 
             styledAttrs.recycle();
 
@@ -950,6 +987,7 @@ public class TextFieldBoxes extends FrameLayout {
         setEndIcon(this.endIconResourceId);
         setIsResponsiveIconColor(this.isResponsiveIconColor);
         setHasClearButton(this.hasClearButton);
+        setPasswordToggledEnabled(this.passwordToggledEnabled);
         setHasFocus(this.hasFocus);
         setAlwaysShowHint(this.alwaysShowHint);
         setUseSameTextColorToChild(this.useSameTextColorToChild);
@@ -1111,7 +1149,9 @@ public class TextFieldBoxes extends FrameLayout {
         if (this.endIconResourceId != 0) {
             this.endIconImageButton.setImageResource(this.endIconResourceId);
             this.endIconImageButton.setVisibility(View.VISIBLE);
-        } else removeEndIcon();
+        } else {
+            removeEndIcon();
+        }
 
         updateClearAndEndIconLayout();
     }
@@ -1129,6 +1169,9 @@ public class TextFieldBoxes extends FrameLayout {
      * remove the end icon by setting the visibility of the end image view to View.GONE
      */
     public void removeEndIcon() {
+        if (passwordToggledEnabled){
+            return;
+        }
         this.endIconResourceId = 0;
         this.endIconImageButton.setImageDrawable(null);
         this.endIconImageButton.setVisibility(View.GONE);
@@ -1162,6 +1205,11 @@ public class TextFieldBoxes extends FrameLayout {
     public void setHasClearButton(boolean hasClearButton) {
         this.hasClearButton = hasClearButton;
         showClearButton(hasClearButton);
+        updateClearAndEndIconLayout();
+    }
+
+    public void setPasswordToggledEnabled(boolean passwordToggledEnabled) {
+        this.passwordToggledEnabled = passwordToggledEnabled;
         updateClearAndEndIconLayout();
     }
 
@@ -1257,23 +1305,23 @@ public class TextFieldBoxes extends FrameLayout {
         return this.bottomLine;
     }
 
-    public AppCompatTextView getHelperLabel() {
+    public TextView getHelperLabel() {
         return this.helperLabel;
     }
 
-    public AppCompatTextView getCounterLabel() {
+    public TextView getCounterLabel() {
         return this.counterLabel;
     }
 
-    public AppCompatTextView getFloatingLabel() {
+    public TextView getFloatingLabel() {
         return this.floatingLabel;
     }
 
-    public AppCompatImageButton getIconImageButton() {
+    public ImageButton getIconImageButton() {
         return this.iconImageButton;
     }
 
-    public AppCompatImageButton getEndIconImageButton() {
+    public ImageButton getEndIconImageButton() {
         return this.endIconImageButton;
     }
 
@@ -1304,6 +1352,10 @@ public class TextFieldBoxes extends FrameLayout {
 
     public boolean getHasClearButton() {
         return this.hasClearButton;
+    }
+
+    public boolean isPasswordToggledEnabled() {
+        return this.passwordToggledEnabled;
     }
 
     public boolean getHasFocus() {
@@ -1379,5 +1431,13 @@ public class TextFieldBoxes extends FrameLayout {
         int green = Color.green(color);
         int blue = Color.blue(color);
         return Color.argb(alpha, red, green, blue);
+    }
+
+    protected static boolean isInputTypePassword(EditText editText) {
+        return editText != null
+                && (editText.getInputType() == InputType.TYPE_NUMBER_VARIATION_PASSWORD
+                || editText.getInputType() == InputType.TYPE_TEXT_VARIATION_PASSWORD
+                || editText.getInputType() == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                || editText.getInputType() == InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
     }
 }
