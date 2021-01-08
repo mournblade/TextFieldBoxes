@@ -28,6 +28,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.widget.TextViewCompat;
 
@@ -1083,6 +1084,27 @@ public class TextFieldBoxes extends FrameLayout {
     public void removeMinCharacters() {
         this.minCharacters = 0;
         updateCounterText(!isManualValidateError);
+    }
+
+    /*
+    * set font to helper label
+    * */
+    public void setFontToHelperLabel(int font){
+        helperLabel.setTypeface(ResourcesCompat.getFont(this.getContext(), font));
+    }
+
+    /*
+     * set font to counter label
+     * */
+    public void setFontToCounterLabel(int font){
+        counterLabel.setTypeface(ResourcesCompat.getFont(this.getContext(), font));
+    }
+
+    /*
+     * set font to floating label
+     * */
+    public void setFontToFloatingLabel(int font){
+        floatingLabel.setTypeface(ResourcesCompat.getFont(this.getContext(), font));
     }
 
     /* Other Setters */
