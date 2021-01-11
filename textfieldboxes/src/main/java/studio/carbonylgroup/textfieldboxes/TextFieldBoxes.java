@@ -1090,6 +1090,9 @@ public class TextFieldBoxes extends FrameLayout {
     * set font to helper label
     * */
     public void setFontToHelperLabel(int font){
+        if (helperLabel == null){
+            return;
+        }
         helperLabel.setTypeface(ResourcesCompat.getFont(this.getContext(), font));
     }
 
@@ -1097,6 +1100,9 @@ public class TextFieldBoxes extends FrameLayout {
      * set font to counter label
      * */
     public void setFontToCounterLabel(int font){
+        if (counterLabel == null){
+            return;
+        }
         counterLabel.setTypeface(ResourcesCompat.getFont(this.getContext(), font));
     }
 
@@ -1104,6 +1110,9 @@ public class TextFieldBoxes extends FrameLayout {
      * set font to floating label
      * */
     public void setFontToFloatingLabel(int font){
+        if (floatingLabel == null){
+            return;
+        }
         floatingLabel.setTypeface(ResourcesCompat.getFont(this.getContext(), font));
     }
 

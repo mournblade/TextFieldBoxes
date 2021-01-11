@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupErrorButton() {
         final Button errorButton = findViewById(R.id.error_button);
-        final TextFieldBoxes errorField = findViewById(R.id.text_field_boxes5);
+        final MyTextFieldBoxes errorField = findViewById(R.id.text_field_boxes5);
         errorField.getBottomLine().setPadding(getResources().getDimensionPixelOffset(R.dimen.upper_panel_paddingStart), 0, 0, 0);
         errorButton.setOnClickListener(new View.OnClickListener() {
             @Override
