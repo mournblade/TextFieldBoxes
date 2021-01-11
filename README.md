@@ -16,8 +16,11 @@ A new Material Design text field that comes in a box, based on [Google Material 
 ​
 ## ***UPDATE NOTICE***
 
-#### 1.4.8 Release
+#### 1.4.9 Release
 - Implement font functionality to TextFieldBoxes
+
+#### 1.4.8 Release
+- Fix input cursor issue
 
 #### 1.4.7 Release
 - Implement password toggle functionality
