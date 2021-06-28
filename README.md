@@ -16,6 +16,12 @@ A new Material Design text field that comes in a box, based on [Google Material 
 ​
 ## ***UPDATE NOTICE***
 
+#### 1.4.11 Release
+- Fix floating label color issue and password toggle button visibility issue if error occurs
+
+#### 1.4.10 Release
+- Fix font functionality issue
+
 #### 1.4.9 Release
 - Implement font functionality to TextFieldBoxes
 

@@ -161,10 +161,16 @@ public class TextFieldBoxes extends FrameLayout {
     protected boolean rtl;
 
     /**
-     * whether the field uses same text color as label & text fields
+     * whether the field uses same text color as text fields
      * False by default.
      */
     protected boolean useSameTextColorToChild;
+
+    /**
+     * whether the field uses same text color as hint & text fields
+     * False by default.
+     */
+    protected boolean useSameTextColorToFloatingLabel;
 
     protected int labelColor = -1;
     protected int labelTopMargin = -1;
@@ -574,6 +580,7 @@ public class TextFieldBoxes extends FrameLayout {
             this.useDenseSpacing = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_useDenseSpacing, false);
             this.rtl = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_rtl, false);
             this.useSameTextColorToChild = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_useSameTextColorToChild, false);
+            this.useSameTextColorToFloatingLabel = styledAttrs.getBoolean(R.styleable.TextFieldBoxes_useSameTextColorToFloatingLabel, false);
 
             if (passwordToggledEnabled){
                 this.endIconResourceId = R.drawable.ic_password_visibility_on;
@@ -681,8 +688,8 @@ public class TextFieldBoxes extends FrameLayout {
      * @param colorRes color resource
      */
     protected void setHighlightColor(int colorRes) {
-
-        this.floatingLabel.setTextColor(colorRes);
+        if (useSameTextColorToFloatingLabel)
+            this.floatingLabel.setTextColor(colorRes);
         if (useSameTextColorToChild)
             this.editText.setTextColor(colorRes);
         setCursorDrawableColor(this.editText, colorRes);
@@ -928,9 +935,11 @@ public class TextFieldBoxes extends FrameLayout {
             this.onError = true;
             activate(true);
             setHighlightColor(this.errorColor);
-            setEndIcon(R.drawable.ic_error_24_dp);
-            this.endIconImageButton.setColorFilter(0);
-            this.endIconImageButton.setAlpha(1f);
+            if (!passwordToggledEnabled) {
+                setEndIcon(R.drawable.ic_error_24_dp);
+                this.endIconImageButton.setColorFilter(0);
+                this.endIconImageButton.setAlpha(1f);
+            }
             this.helperLabel.setTextColor(this.errorColor);
             if (errorText != null) {
                 this.helperLabel.setText(errorText);
@@ -993,6 +1002,7 @@ public class TextFieldBoxes extends FrameLayout {
         setHasFocus(this.hasFocus);
         setAlwaysShowHint(this.alwaysShowHint);
         setUseSameTextColorToChild(this.useSameTextColorToChild);
+        setUseSameTextColorToFloatingLabel(this.useSameTextColorToFloatingLabel);
         updateCounterText(!isManualValidateError);
         updateBottomViewVisibility();
     }
@@ -1087,8 +1097,8 @@ public class TextFieldBoxes extends FrameLayout {
     }
 
     /*
-    * set font to helper label
-    * */
+     * set font to helper label
+     * */
     public void setFontToHelperLabel(int font){
         if (helperLabel == null){
             return;
@@ -1281,6 +1291,11 @@ public class TextFieldBoxes extends FrameLayout {
         this.useSameTextColorToChild = useSameTextColorToChild;
     }
 
+
+    public void setUseSameTextColorToFloatingLabel(boolean useSameTextColorToFloatingLabel) {
+        this.useSameTextColorToFloatingLabel = useSameTextColorToFloatingLabel;
+    }
+
     /* Text Getters */
     public String getLabelText() {
         return this.labelText;
@@ -1404,6 +1419,10 @@ public class TextFieldBoxes extends FrameLayout {
 
     public boolean isUseSameTextColorToChild() {
         return this.useSameTextColorToChild;
+    }
+
+    public boolean isUseSameTextColorToFloatingLabel() {
+        return this.useSameTextColorToFloatingLabel;
     }
 
     /**

@@ -31,6 +31,7 @@
         <attr name="useDenseSpacing" format="boolean" />
         <attr name="rtl" format="boolean" />
         <attr name="useSameTextColorToChild" format="boolean" />
+        <attr name="useSameTextColorToFloatingLabel" format="boolean" />
 
         <!-- Set whether to automaticavalidateErrordate, or only on demand
                @see {@link TextFieldBoxes#setManualValidateError(boolean) } -->

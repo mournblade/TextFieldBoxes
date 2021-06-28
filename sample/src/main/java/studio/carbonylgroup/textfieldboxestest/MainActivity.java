@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         setupDarkThemeButton(dark);
         setupErrorButton();
         setupPasswordField();
+        setupErrorPasswordButton();
     }
 
     private void setupPasswordField() {
@@ -91,6 +92,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 errorField.setError("Invalid coupon code.", false);
+            }
+        });
+    }
+
+    private void setupErrorPasswordButton() {
+        final Button errorButton = findViewById(R.id.error_password_button);
+        final TextFieldBoxes errorField = findViewById(R.id.text_field_boxes_password);
+        errorButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                errorField.setError("Invalid Password", false);
             }
         });
     }
